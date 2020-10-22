@@ -1,0 +1,32 @@
+version:  '3.7'
+
+services:
+    mariaMaster:
+        image: mariadb:10.4
+        restart: on-failure
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        networks:
+            MSNetwork:
+                aliases:
+                    - master.rep
+        volumes:
+            - ./config/master.cnf:/etc/mysql/mariadb.conf.d/master.cnf
+            - ./scripts/master.sql:/docker-entrypoint-initdb.d/master.sql
+        ports:
+            - 3306
+
+    mariaSlave:
+        image: mariadb:10.4
+        restart: on-failure
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        networks:
+            MSNetwork:
+                aliases:
+                    - slave.rep
+        volumes:
+            - ./config/slave.cnf:/etc/mysql/mariadb.conf.d/slave.cnf
+            - ./scripts/slave.sql:/docker-entrypoint-initdb.d/slave.sql
+networks:
+    MSNetwork:
