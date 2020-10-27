@@ -1,0 +1,64 @@
+version:  '3.7'
+
+services:
+    maria1:
+        container_name: clusterMaster
+        image: mariadb:10.4
+        restart: on-failure
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        volumes:
+            - ./shared/master:/var/lib/mysql
+            - ./config/master.cnf:/etc/mysql/conf.d/galera.cnf
+            - ./scripts/db.sql:/entrypoint.d/
+        networks:
+            ClusterNetwork:
+                aliases:
+                    - master.localhost
+        command: --wsrep-new-cluster
+        ports:
+            - 3306
+            - 4444
+            - 4567
+            - 4568
+
+    maria2:
+        container_name: clusterSlave1
+        image: mariadb:10.4
+        restart: on-failure
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        volumes:
+            - ./shared/slave1:/var/lib/mysql
+            - ./config/slave1.cnf:/etc/mysql/conf.d/galera.cnf
+        networks:
+            ClusterNetwork:
+                aliases:
+                    - slave1.localhost
+        ports:
+            - 3306
+            - 4444
+            - 4567
+            - 4568
+    
+    maria3:
+        container_name: clusterSlave2
+        image: mariadb:10.4
+        restart: on-failure
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        volumes:
+            - ./shared/slave2:/var/lib/mysql
+            - ./config/slave2.cnf:/etc/mysql/conf.d/galera.cnf
+        networks:
+            ClusterNetwork:
+                aliases:
+                    - slave2.localhost
+        ports:
+            - 3306
+            - 4444
+            - 4567
+            - 4568
+
+networks:
+    ClusterNetwork:

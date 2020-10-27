@@ -1,0 +1,12 @@
+[mysqld]
+wsrep_node_address="slave1.localhost"
+wsrep_node_name="node2"
+wsrep_cluster_address="gcomm://master.localhost,slave1.localhost,slave2.localhost"
+
+wsrep_provider=/usr/lib/libgalera_smm.so
+binlog_format=ROW
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+innodb_doublewrite=1
+query_cache_size=0
+wsrep_on=ON
