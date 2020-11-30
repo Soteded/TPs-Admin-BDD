@@ -1,0 +1,24 @@
+= TP10
+
+== Docker-compose
+
+[source,yaml]
+----
+include::docker-compose.yml[]
+----
+
+== Notification Channel
+
+image::images/notif_chan.png[]
+
+image::images/notif_chan.png[]
+
+== Configuration d'une alerte
+
+image::images/alert_conf.png[]
+
+== Test
+
+Ensuite après avoir faire énormément de lecture dans la BDD:
+
+image::images/alert_test.png[]

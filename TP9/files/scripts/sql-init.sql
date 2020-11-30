@@ -1,0 +1,15 @@
+DROP DATABASE IF EXISTS TP8;
+CREATE DATABASE TP8;
+USE TP8;
+
+DROP TABLE IF EXISTS clients;
+
+CREATE TABLE clients (
+    nom VARCHAR(255),
+    prenom VARCHAR(255),
+    naissance DATE
+);
+
+INSERT INTO clients VALUES ("Theo", "VICENTE", "2000-09-16"), ("Bob", "SINCLAR", "1969-05-10"), ("Pierre", "SALMI", "2000-12-08");
+
+SELECT * FROM clients;

@@ -1,0 +1,73 @@
+version: '3.7'
+
+services:
+  db:
+    image: mariadb
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+        - ./sql/user.sql:/docker-entrypoint-initdb.d/user.sql:ro
+        - ./sql/TP1.sql:/docker-entrypoint-initdb.d/TP1.sql:ro
+        - ./sql/sylius_dev.sql:/docker-entrypoint-initdb.d/sylius_dev.sql:ro
+        - mariadb_tp9:/var/lib/mysql
+    expose:
+      - 3306
+    networks:
+     - bdd
+
+  exporter:
+    image: prom/mysqld-exporter
+    restart: on-failure
+    environment:
+      DATA_SOURCE_NAME: "exporter:password@(db:3306)/"
+    expose:
+      - 9104
+    networks:
+      - bdd
+      - exporter
+    depends_on:
+      - db
+  
+  prometheus:
+    image: prom/prometheus
+    restart: on-failure
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+    expose:
+      - 9090
+    ports:
+      - "9090:9090"
+    networks:
+      - exporter
+      - prometheus
+    depends_on:
+      - exporter
+
+  grafana:
+    image: grafana/grafana
+    restart: on-failure
+    volumes:
+      - grafana_data_tp9:/var/lib/grafana
+      - ./provisioning:/etc/grafana/provisioning
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "3000:3000"
+    networks:
+      - prometheus
+      - bdd
+    depends_on:
+      - prometheus
+      - db
+
+volumes:
+  mariadb_tp9:
+  grafana_data_tp9:
+
+networks:
+  bdd:
+  exporter:
+  prometheus:
