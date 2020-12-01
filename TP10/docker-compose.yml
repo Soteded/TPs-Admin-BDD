@@ -7,10 +7,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
     volumes:
-        - ./sql/user.sql:/docker-entrypoint-initdb.d/user.sql:ro
-        - ./sql/TP1.sql:/docker-entrypoint-initdb.d/TP1.sql:ro
-        - ./sql/sylius_dev.sql:/docker-entrypoint-initdb.d/sylius_dev.sql:ro
-        - mariadb_tp9:/var/lib/mysql
+        - ./sql/user.sql:/docker-entrypoint-initdb.d/user.sql
+        - ./sql/TP1.sql:/docker-entrypoint-initdb.d/TP1.sql
+        - ./sql/sylius_dev.sql:/docker-entrypoint-initdb.d/sylius_dev.sql
     expose:
       - 3306
     networks:
@@ -48,7 +47,6 @@ services:
     image: grafana/grafana
     restart: on-failure
     volumes:
-      - grafana_data_tp9:/var/lib/grafana
       - ./provisioning:/etc/grafana/provisioning
     environment:
       GF_SECURITY_ADMIN_USER: admin
@@ -62,10 +60,6 @@ services:
     depends_on:
       - prometheus
       - db
-
-volumes:
-  mariadb_tp9:
-  grafana_data_tp9:
 
 networks:
   bdd:
